@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #00ffcc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .clock-container {
+            text-align: center;
+            border: 2px solid #00ffcc;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        #time {
+            font-size: 80px;
+            margin-bottom: 10px;
+        }
+
+        #date {
+            font-size: 24px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-container">
+        <div id="time">00:00:00</div>
+        <div id="date">00/00/0000</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+
+            // จัดรูปแบบเวลา h:m:s
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+
+            // จัดรูปแบบวันที่ d/m/y
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('date').textContent = `${day}/${month}/${year}`;
+        }
+
+        // เรียกใช้งานฟังก์ชันทุกๆ 1 วินาที
+        setInterval(updateClock, 1000);
+
+        // เรียกใช้ครั้งแรกทันทีที่โหลดหน้าเว็บ
+        updateClock();
+    </script>
+
+</body>
+</html>

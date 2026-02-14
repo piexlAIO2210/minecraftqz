@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CHRONOS SLIDER | LEVEL 800</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@100;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon: #15ff00;
+            --void: #010206;
+            --font-main: 'Orbitron', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; background: var(--void); color: white;
+            font-family: var(--font-main); height: 100vh; overflow: hidden;
+        }
+
+        #star-canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.2; }
+
+        .app-container {
+            position: relative; z-index: 10; height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: space-between;
+            background: radial-gradient(circle at center, transparent, var(--void) 95%);
+        }
+
+        /* --- แถบเลื่อนเวลาแบบยาว (Temporal Timeline) --- */
+        .timeline-container {
+            width: 100%; padding-top: 30px; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .timeline-track {
+            width: 90%; height: 2px; background: rgba(255, 255, 255, 0.1);
+            position: relative; margin: 20px 0; border-radius: 2px;
+        }
+
+        /* ตัววิ่งบนแถบเวลา */
+        .timeline-pointer {
+            position: absolute; top: -5px; left: 0%; width: 12px; height: 12px;
+            background: var(--neon); border-radius: 50%;
+            box-shadow: 0 0 15px var(--neon); transition: left 1s linear;
+        }
+
+        .time-labels {
+            width: 90%; display: flex; justify-content: space-between;
+            font-family: var(--font-mono); font-size: 0.6rem; color: #444;
+        }
+
+        .clock-display {
+            text-align: center; margin-bottom: 10px;
+        }
+
+        .clock-display h1 {
+            font-size: 2.2rem; margin: 0; color: var(--neon); letter-spacing: 5px;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .date-display {
+            font-family: var(--font-mono); font-size: 0.7rem; color: #666; letter-spacing: 2px;
+        }
+
+        /* --- เมนูเลือก (Static Nodes) --- */
+        .node-matrix {
+            display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center;
+        }
+
+        .node {
+            width: 85%; max-width: 340px; padding: 20px; 
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center; font-size: 1.2rem; letter-spacing: 4px;
+            transition: 0.3s; position: relative;
+        }
+
+        .node.active {
+            border-color: var(--neon); background: rgba(0, 243, 255, 0.05);
+            color: var(--neon); text-shadow: 0 0 10px var(--neon);
+        }
+
+        /* --- แผงปุ่มกด --- */
+        .controller {
+            width: 100%; height: 140px; background: rgba(0,0,0,0.9); border-top: 1px solid #111;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+        }
+
+        .btn {
+            background: #050505; border: none; color: #333; font-family: var(--font-mono);
+            font-size: 0.7rem; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; cursor: pointer;
+        }
+
+        .btn:active { background: white; color: black; }
+        .btn-hi { color: var(--neon); }
+    </style>
+</head>
+<body>
+
+<canvas id="star-canvas"></canvas>
+
+<div class="app-container">
+    <div class="timeline-container">
+        <div class="clock-display">
+            <h1 id="txt-time">00:00:00</h1>
+            <div class="date-display" id="txt-date">DAY: 00/00/0000</div>
+        </div>
+        
+        <div class="timeline-track">
+            <div class="timeline-pointer" id="pointer"></div>
+        </div>
+        
+        <div class="time-labels">
+            <span>0</span>
+            <span>TIMELIVE 60s</span>
+            <span>60</span>
+        </div>
+    </div>
+
+    <div class="node-matrix">
+        <div class="node" id="n0" data-url="./note.html">Version</div>
+        <div class="node" id="n1" data-url="./time.html">Time</div>
+        <div class="node" id="n2" data-url="./index2.html">เพิ่มเติม</div>
+    </div>
+
+    <div class="controller">
+        <button class="btn" style="color:#ff0055" onclick="cmd('e')">PURGE<br>[E]</button>
+        <button class="btn btn-hi" onclick="cmd('up')">UP</button>
+        <button class="btn btn-hi" onclick="cmd('down')">DN</button>
+        <button class="btn" style="color:#ffcc00" onclick="cmd('enter')">MANIFEST<br>[ENT]</button>
+    </div>
+</div>
+
+<script>
+    let currentIdx = -1;
+    const items = document.querySelectorAll('.node');
+
+    // --- Temporal Logic (Time + Slider) ---
+    function updateChronos() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        
+        document.getElementById('txt-time').innerText = `${h}:${m}:${s}`;
+        document.getElementById('txt-date').innerText = `DAY: ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
+        
+        // เลื่อนจุดบนแถบตามวินาที (0-60 วินาที)
+        const secondsPercent = (now.getSeconds() / 60) * 100;
+        document.getElementById('pointer').style.left = secondsPercent + "%";
+    }
+    setInterval(updateChronos, 1000);
+    updateChronos();
+
+    // --- Starfield ---
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    function init() {
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        stars = Array(100).fill().map(() => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, v: Math.random()*0.3 }));
+    }
+    function draw() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "white";
+        stars.forEach(s => {
+            s.y += s.v; if(s.y > canvas.height) s.y = 0;
+            ctx.beginPath(); ctx.arc(s.x, s.y, 0.8, 0, Math.PI*2); ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    window.onresize = init; init(); draw();
+
+    // --- Command Logic ---
+    const audio = new (window.AudioContext || window.webkitAudioContext)();
+    function beep(f, d) {
+        const o = audio.createOscillator(); const g = audio.createGain();
+        o.frequency.value = f; o.connect(g); g.connect(audio.destination);
+        o.start(); g.gain.exponentialRampToValueAtTime(0.00001, audio.currentTime + d);
+        o.stop(audio.currentTime + d);
+    }
+
+    function cmd(act) {
+        if(navigator.vibrate) navigator.vibrate(25);
+        if(act === 'up' || act === 'down') {
+            beep(440, 0.1);
+            items.forEach(el => el.classList.remove('active'));
+            if(currentIdx === -1) currentIdx = act === 'up' ? items.length-1 : 0;
+            else currentIdx = (currentIdx + (act === 'up' ? -1 : 1) + items.length) % items.length;
+            items[currentIdx].classList.add('active');
+        } else if(act === 'e') {
+            beep(200, 0.3);
+            currentIdx = -1; items.forEach(el => el.classList.remove('active'));
+        } else if(act === 'enter' && currentIdx !== -1) {
+            beep(800, 0.5);
+            window.location.href = items[currentIdx].dataset.url;
+        }
+    }
+
+    document.addEventListener('keydown', e => {
+        if(e.key === "ArrowUp") cmd('up'); if(e.key === "ArrowDown") cmd('down');
+        if(e.key.toLowerCase() === "e") cmd('e'); if(e.key === "Enter") cmd('enter');
+    });
+</script>
+</body>
+</html>
