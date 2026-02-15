@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOD LEVEL 9000 - ULTIMATE INTERFACE</title>
+    <style>
+        /* --- GOD CSS STYLE --- */
+        :root {
+            --god-red: #ff0000;
+            --god-gold: #ffd700;
+            --god-dark: #0a0a0a;
+            --god-glow: 0 0 15px rgba(255, 0, 0, 0.6);
+        }
+
+        body {
+            background-color: var(--god-dark);
+            color: #eeeeee;
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: radial-gradient(circle at center, #1a0505 0%, #050505 100%);
+        }
+
+        /* เอฟเฟกต์ละอองวิญญาณ */
+        .aura {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            text-transform: uppercase;
+        }
+
+        .god-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            color: var(--god-red);
+            text-shadow: var(--god-glow);
+            margin: 0;
+            letter-spacing: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        .sub-status {
+            color: var(--god-gold);
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            opacity: 0.8;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* กล่องอ่านคัมภีร์ */
+        .reader-module {
+            background: rgba(15, 15, 15, 0.9);
+            border: 2px solid var(--god-red);
+            padding: 40px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.1);
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+        }
+
+        .reader-module::before {
+            content: "GOD_DATA_STREAM";
+            position: absolute;
+            top: 5px; right: 20px;
+            font-size: 0.6rem;
+            color: var(--god-red);
+        }
+
+        .text-content {
+            line-height: 1.8;
+            font-size: 1.15rem;
+            color: #ccc;
+        }
+
+        .text-content h2 {
+            color: var(--god-gold);
+            border-bottom: 1px solid var(--god-red);
+            padding-bottom: 10px;
+        }
+
+        /* Stats Panel */
+        .stats-sidebar {
+            background: rgba(255, 0, 0, 0.05);
+            border-left: 1px solid var(--god-gold);
+            padding: 20px;
+        }
+
+        .stat-box { margin-bottom: 25px; }
+        .stat-label { font-size: 0.8rem; color: var(--god-gold); display: block; }
+        .stat-bar { background: #222; height: 6px; width: 100%; margin-top: 8px; position: relative; }
+        .stat-fill { 
+            height: 100%; 
+            background: var(--god-red); 
+            box-shadow: 0 0 10px var(--god-red);
+            width: 0%; transition: width 2s ease-out;
+        }
+
+        /* ปุ่มสุดโหด */
+        .ascend-btn {
+            width: 100%;
+            padding: 20px;
+            background: transparent;
+            border: 2px solid var(--god-red);
+            color: var(--god-red);
+            font-weight: bold;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .ascend-btn:hover {
+            background: var(--god-red);
+            color: white;
+            box-shadow: 0 0 40px var(--god-red);
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); text-shadow: 0 0 10px var(--god-red); }
+            50% { transform: scale(1.02); text-shadow: 0 0 30px var(--god-red); }
+            100% { transform: scale(1); text-shadow: 0 0 10px var(--god-red); }
+        }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aura"></div>
+
+    <header>
+        <p class="sub-status">[ SYSTEM: OVERLOAD ]</p>
+        <h1 class="god-title">อัพเดท</h1>
+        <p class="sub-status">อำนาจที่แท้จริง อยู่ในมือคุณ</p>
+    </header>
+
+    <div class="main-grid">
+        <main class="reader-module">
+            <div class="text-content">
+                <h2 id="typing-title">อัพเดท</h2>
+                <p id="god-text">
+                    15/2/2569 ~ อัพเดท menu "server.jar" เข้ามาเป็นการโหลด server minecraft
+                    --- menu "อัพเดท" เข้ามาเป็นพิเศษ
+                </p>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        // --- GOD JAVASCRIPT EFFECTS ---
+
+        // เอฟเฟกต์หน้าจอสั่นเมื่อกดปุ่ม
+        function godShock() {
+            document.body.style.animation = "shake 0.2s infinite";
+            setTimeout(() => {
+                document.body.style.animation = "";
+                alert("GOD MODE: ASCENSION COMPLETE!");
+            }, 500);
+        }
+
+        // เพิ่ม Animation สั่นใน CSS ผ่าน JS
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0% { transform: translate(1px, 1px) rotate(0deg); }
+                20% { transform: translate(-3px, 0px) rotate(1deg); }
+                40% { transform: translate(3px, 2px) rotate(-1deg); }
+                60% { transform: translate(-3px, 1px) rotate(0deg); }
+                80% { transform: translate(3px, 1px) rotate(-1deg); }
+                100% { transform: translate(1px, -2px) rotate(1deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // เอฟเฟกต์ค่อยๆ พิมพ์ตัวอักษร
+        const textElement = document.getElementById('god-text');
+        const content = textElement.innerHTML;
+        textElement.innerHTML = '';
+        let i = 0;
+
+        function typeWriter() {
+            if (i < content.length) {
+                textElement.innerHTML += content.charAt(i);
+                i++;
+                setTimeout(typeWriter, 15);
+            }
+        }
+
+        window.onload = typeWriter;
+    </script>
+</body>
+</html>
